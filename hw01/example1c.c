@@ -40,7 +40,7 @@ int main()
     int len = strlen(input);
     int ans = 0;
     char *p = input;
-    while (*p >= '0' && *p <= '9')
+    while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
     {
         ans = ans * 10 + *p - '0';
         p++;
@@ -52,21 +52,24 @@ int main()
             int part1 = 0;
             char op1 = *p;
             p++;
-            while (*p >= '0' && *p <= '9')
+            while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
             {
                 part1 = part1 * 10 + *p - '0';
                 p++;
             }
-            while(*p != '+' && *p != '-')
+            while(*p != '\0' && *p != '+' && *p != '-' && *p != '=')
             {
                 char op = *p;
                 p++;
                 int num = 0;
-                while (*p >= '0' && *p <= '9')
+                int flag = 0;
+                while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
                 {
                     num = num * 10 + *p - '0';
                     p++;
+                    flag = 1;
                 }
+                if(!flag) num = 1;
                 if(op == '*')
                 {
                     part1 *= num;
@@ -81,12 +84,12 @@ int main()
         }
         else if(*p == '*' || *p == '/')
         {
-            while(*p != '+' && *p != '-')
+            while(*p != '\0' && *p != '+' && *p != '-' && *p != '=')
             {
                 char op = *p;
                 p++;
                 int num = 0;
-                while (*p >= '0' && *p <= '9')
+                while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
                 {
                     num = num * 10 + *p - '0';
                     p++;
