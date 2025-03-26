@@ -13,6 +13,7 @@
             ],
             "options": {
                 "cwd": "${fileDirname}"
+                "cwd": "C:\\msys64\\ucrt64\\bin"
             },
             "problemMatcher": [
                 "$gcc"
