@@ -6,17 +6,6 @@
 #include<stdlib.h>
 #include<string.h>
 #define ll long long
-#define N 100001
-#define Deint(x) printf(#x" = %d\n", x)
-#define Dell(x) printf(#x" = %lld\n", x)
-#define Delf(x) printf(#x" = %lf\n", x)
-#define Deull(x) printf(#x" = %llu\n", x)
-#define Destr(x) printf(#x" = %s\n", x)
-#define Deint(x) printf(#x" = %d\n", x)
-#define Dechar(x) printf(#x" = %c\n", x)
-#define De printf("debug\n")
-#define loop(l,r) for(int i = l; i <= r; i++)
-#define input(i,f) scanf("%(#f)", &(i))
 double eps = 1e-9;
 void delete_space(char *s)
 {
@@ -25,7 +14,8 @@ void delete_space(char *s)
     {
         if (*s != ' ')
         {
-            *d++ = *s;
+            *d++ = *s;//这里本质上，就通过地址修改了原来的字符串。
+            //s比d快，所以不会出现覆盖的情况。
         }
         s++;
     }
@@ -40,7 +30,7 @@ int main()
     int len = strlen(input);
     int ans = 0;
     char *p = input;
-    while (*p >= '0' && *p <= '9')
+    while (*p != '\0' && *p != '=' && *p >= '0' && *p <= '9')
     {
         ans = ans * 10 + *p - '0';
         p++;
@@ -49,24 +39,27 @@ int main()
     {
         if (*p == '+' || *p == '-')
         {
-            int part1 = 0;
+            int part1 = 0; //part1是所有这个加减号到下一个加减号之间的结果。
             char op1 = *p;
             p++;
-            while (*p >= '0' && *p <= '9')
+            while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
             {
                 part1 = part1 * 10 + *p - '0';
                 p++;
             }
-            while(*p != '+' && *p != '-')
+            while(*p != '\0' && *p != '+' && *p != '-' && *p != '=')
             {
                 char op = *p;
                 p++;
                 int num = 0;
-                while (*p >= '0' && *p <= '9')
+                int flag = 0;
+                while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
                 {
                     num = num * 10 + *p - '0';
                     p++;
+                    flag = 1;
                 }
+                if(!flag) num = 1;
                 if(op == '*')
                 {
                     part1 *= num;
@@ -81,12 +74,12 @@ int main()
         }
         else if(*p == '*' || *p == '/')
         {
-            while(*p != '+' && *p != '-')
+            while(*p != '\0' && *p != '+' && *p != '-' && *p != '=')
             {
                 char op = *p;
                 p++;
                 int num = 0;
-                while (*p >= '0' && *p <= '9')
+                while (*p != '\0' && *p >= '0' && *p <= '9'&& *p != '=')
                 {
                     num = num * 10 + *p - '0';
                     p++;
