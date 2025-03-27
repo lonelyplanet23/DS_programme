@@ -1,13 +1,12 @@
+//* 用 C 语言实现图书管理系统，支持录入、查找、删除操作，按书名排序，文件读写，控制台交互，输出格式规范。
+//! 输出指定字符宽度的方法！
 #include<stdio.h>
 #include<math.h>
 #include<string.h>
 #include<ctype.h>
 #include<stdlib.h>
 #include<string.h>
-#define ll long long
-#define N 100001
 #define BOOK struct book
-double eps = 1e-9;
 int n = 0;
 struct book
 {
@@ -23,35 +22,59 @@ int mycmp(const void *a, const void *b)
 void input_book(BOOK book)
 {
     books[n++] = book;
-    qsort(books, n-1, sizeof(BOOK), mycmp);
-    // int left = 0;
-    // int right = n - 1; 
-    // int mid;
-    // while(left <= right)
-    // {
-    //     mid = (right + left) / 2;
-    //     if(mycmp(&books[mid], &book) < 0)
-    //     {
-    //         left = mid + 1;
-    //     }
-    //     else if(mycmp(&books[mid], &book) > 0)
-    //     {
-    //         right = mid - 1;
-    //     }
-    // }
+    qsort(books, n, sizeof(BOOK), mycmp);
 }
-void find_book(BOOK book);
-void delete_book(BOOK book)
+void output(FILE *out, BOOK book)
 {
-    n--;
-    for(int)
+    int len1 = strlen(book.name);
+    int len2 = strlen(book.author);
+    int len3 = strlen(book.publisher);
+    int len4 = strlen(book.publish_dates);
+    fprintf(out, "%-50s%-20s%-30s%-10s\n", book.name, book.author, book.publisher, book.publish_dates);
+}
+void find_book(char *key)
+{
+    
+    for(int i = 0; i < n; i++)
+    {
+        if(strstr(books[i].name, key) != NULL)
+        {
+            int len1 = strlen(books[i].name);
+            int len2 = strlen(books[i].author);
+            int len3 = strlen(books[i].publisher);
+            int len4 = strlen(books[i].publish_dates);
+            printf("%-50s%-20s%-30s%-10s\n", books[i].name, books[i].author, books[i].publisher, books[i].publish_dates);
+        }
+    }
+}
+void delete_book(char *key)
+{
+    int delete[501] = {0};
+    int cnt = 0;
+    for(int i = 0; i < n; i++)
+    {
+        if(strstr(books[i].name, key) != NULL)
+        {
+            delete[i] = 1;
+            cnt++;
+        }
+    }
+    for(int i = 0, j = 0; i < n; i++)
+    {
+        if(delete[i] == 0)
+        {
+            books[j++] = books[i];
+        }
+    }
+    n -= cnt;
+    memset(books + n, 0, sizeof(BOOK) * cnt);
 }
 int main()
 {
     FILE* books_lib = fopen("books.txt", "r");
     FILE* out = fopen("ordered.txt", "w");
     //读取文件，储存每一行的图书信息
-    while(~(scanf("%s %s %s %s", &books[n].name, &books[n].author, &books[n].publisher, &books[n].publish_dates)))
+    while(~(fscanf(books_lib, "%s %s %s %s", &books[n].name, &books[n].author, &books[n].publisher, &books[n].publish_dates)))
     {
         n++;
     }
@@ -63,18 +86,28 @@ int main()
     {
         if(op == 1)
         {
-
+            scanf("%s %s %s %s", &books[n].name, &books[n].author, &books[n].publisher, &books[n].publish_dates);
+            input_book(books[n]);
         }
         if(op == 2)
         {
-
+            char key[51];
+            scanf("%s", key);
+            find_book(key);
         }
         if(op == 3)
         {
-
+            char key[51];
+            scanf("%s", key);
+            delete_book(key);
         }
         scanf("%d", &op);
     }
-
+    for(int i = 0; i < n; i++)
+    {
+        output(out, books[i]);
+    }
+    fclose(books_lib);
+    fclose(out);
     return 0;
 }
