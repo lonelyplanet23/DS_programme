@@ -26,10 +26,6 @@ void input_book(BOOK book)
 }
 void output(FILE *out, BOOK book)
 {
-    int len1 = strlen(book.name);
-    int len2 = strlen(book.author);
-    int len3 = strlen(book.publisher);
-    int len4 = strlen(book.publish_dates);
     fprintf(out, "%-50s%-20s%-30s%-10s\n", book.name, book.author, book.publisher, book.publish_dates);
 }
 void find_book(char *key)
@@ -39,10 +35,6 @@ void find_book(char *key)
     {
         if(strstr(books[i].name, key) != NULL)
         {
-            int len1 = strlen(books[i].name);
-            int len2 = strlen(books[i].author);
-            int len3 = strlen(books[i].publisher);
-            int len4 = strlen(books[i].publish_dates);
             printf("%-50s%-20s%-30s%-10s\n", books[i].name, books[i].author, books[i].publisher, books[i].publish_dates);
         }
     }
