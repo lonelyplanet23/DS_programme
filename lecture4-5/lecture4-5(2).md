@@ -3,8 +3,11 @@
 ---
 
 ## 2.4 线性表的链式存储结构
-
-### 一、链表基本操作
+**写在前头** 
+1. 新建结点指针一定初始化 (malloc / 指向)
+2. **画出图示，分析语句顺序！！如** 
+3. **不要轻易移动头指针！**
+### 一、单链表
 1. **创建链表**  
    ```c
    Nodeptr createList(int n) {
@@ -22,17 +25,18 @@
    • **时间复杂度**：O(n)
 
 2. **插入操作**  
-   • 头插法：时间复杂度 O(1)  
+   • 头插：时间复杂度 O(1)  
      ```c
      Nodeptr insertFirst(Nodeptr list, ElemType elem) {
          Nodeptr p = (Nodeptr)malloc(sizeof(Node));
          p->data = elem;
          p->link = list;
-         return p;  // 返回新头节点 不要
+         return p;  // 返回新头节点 不要直接令list = list->link
      }
      ```
      **不要直接令 list = p，（局部）在函数结束后list依然指向了第二个**
-   • 指定位置插入：时间复杂度 O(n)  
+   
+   • 其他位置插入：时间复杂度 O(n)?(是否给出具体指针)  
      ```c
      void insertAfter(Nodeptr p, ElemType elem) {
          Nodeptr q = (Nodeptr)malloc(sizeof(Node));
@@ -45,12 +49,28 @@
 3. **删除操作**  
    • 删除指定节点（需前驱指针）：时间复杂度 O(1)  
      ```c
-     void deleteNode(Nodeptr prev, Nodeptr p) {
-         prev->link = p->link;
-         free(p);
+     void deleteNode(Nodeptr list, Nodeptr prv, Nodeptr p)
+     {// p 待删节点，prv先前节点
+        if(p == list)
+        {
+            list = p -> link;
+        }
+        else
+        {
+            prv->link = p->link;
+        }
+        free(p) //! 注意清理
+        return list;
      }
      ```
+    + 若未给出前驱，则需自己找
+    ```C
+        Nodeptr prv;
+        for(prv = list, prv != p && prv != NULL, prv = prv->next);
+    ```
 
+4. **头节点、哑结点**
+    - 设立一个空结点作为头结点
 ---
 
 ### 二、循环链表
