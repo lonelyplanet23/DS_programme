@@ -4,7 +4,10 @@
         "m-A.C": "cpp",
         "m-B.C": "cpp",
         "type_traits": "cpp",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "string.h": "c",
+        "math.h": "c",
+        "ctype.h": "c"
     },
     "Codegeex.RepoIndex": true
 }
