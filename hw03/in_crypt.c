@@ -85,7 +85,7 @@ void encrypt_list(nodeptr tail, char *encrypt)
     while(p != q)
     {
         int movingTimes = (int)p->ch;
-        p = delete(p,); //head这时无所指
+        p = delete(p,p); //head这时无所指
 
 
     }

@@ -7,7 +7,8 @@
         "stdlib.h": "c",
         "string.h": "c",
         "math.h": "c",
-        "ctype.h": "c"
+        "ctype.h": "c",
+        "lecture7-bankService.C": "cpp"
     },
     "Codegeex.RepoIndex": true
 }
