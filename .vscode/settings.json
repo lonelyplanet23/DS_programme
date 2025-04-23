@@ -10,5 +10,11 @@
         "ctype.h": "c",
         "lecture7-bankService.C": "cpp"
     },
-    "Codegeex.RepoIndex": true
+    "Codegeex.RepoIndex": true,
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": true,
+        "markdown": false,
+        "scminput": false
+    }
 }
