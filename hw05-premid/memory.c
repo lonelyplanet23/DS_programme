@@ -64,7 +64,16 @@ Nodeptr create_list(int n)
     }
     // Creating a circular linked list by pointing the last node to the head
     p->next = head;
-    return p;
+    
+    Nodeptr minpre = p;
+    for(Nodeptr t = head; t->next != head; t = t->next)
+    {
+        if(t->next->pos < minpre->next->len)
+        {
+            minpre = t;
+        }
+    }
+    return minpre;
 }
 Nodeptr allocate_memory(Nodeptr dst_prv, Nodeptr dst, int len)
 {
@@ -84,13 +93,6 @@ Nodeptr allocate_memory(Nodeptr dst_prv, Nodeptr dst, int len)
     }
     else if(dst->len > len)
     {
-        // if(dst->pos == 142640)
-        // {
-        //     printf(" %d mem: %d   apply: %d\n", dst->pos, dst->len, len);
-        //     printf("At this time:");
-        //     print(dst);
-        //     printf("\n");
-        // }
         dst->len -= len;
         return dst_prv;
     }
@@ -105,41 +107,21 @@ Nodeptr apply_for_memmory(Nodeptr prv, int len)
     Nodeptr cur = prv->next;
     Nodeptr best_fit_prv = NULL;
     Nodeptr p = prv;
-    if(len == 2048)
-    {
-        print(prv);
-        printf("\n");
-    }
+    // if(len == 2048)
+    // {
+    //     print(prv);
+    //     printf("\n");
+    // }
 
     do
     {
-        if(best_fit_prv == NULL)
-        {
-            if(p->next->len == len)
-            {
-                best_fit_prv = p;
-                break;
-            }
-            else if(p->next->len > len && best_fit_prv == NULL)
-            {
-                best_fit_prv = p;
-            }
-            else if(p->next->len < len)
-            {
-                p = p->next;
-                continue;
-            }
-        }
-        if(p->next->len == len)
+        if(p->next->len >= len)
         {
             best_fit_prv = p;
             break;
         }
-        else if(p->next->len >= len && p->next->len < best_fit_prv->next->len) //严格小于
-        {
-            best_fit_prv = p;
-        }
         p = p->next;
+        
     } while(p->next != cur);
     if(best_fit_prv == NULL)
     {
