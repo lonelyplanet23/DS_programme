@@ -135,12 +135,12 @@ void infix_to_suffix()
     {
         push(pop(opstack, &top1), RPN, &top2);
     }
-    // printf("suffix: ");
-    // for (int i = 0; i <= top2; i++)
-    // {
-    //     printf("%c", RPN[i]);
-    // }
-    // printf("\n");
+    printf("suffix: ");
+    for (int i = 0; i <= top2; i++)
+    {
+        printf("%c", RPN[i]);
+    }
+    printf("\n");
 }
 void suffix_exp()
 {

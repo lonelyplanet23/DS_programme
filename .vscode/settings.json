@@ -12,7 +12,7 @@
     },
     "Codegeex.RepoIndex": true,
     "github.copilot.enable": {
-        "*": false,
+        "*": true,
         "plaintext": true,
         "markdown": false,
         "scminput": false
