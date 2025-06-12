@@ -76,44 +76,55 @@ void Create_list(FILE* fp)
     //一条线路一条线路的读取
     while(fgets(line, sizeof(line), fp) != NULL) 
     {
-        int line_index, tot; //线路编号和站点数
-        sscanf(line, "%d %d", &line_index, &tot); //读取线路编号 站点数
         if(line[0] == '\n' || line[0] == '\r') continue; 
-        Node current, prev; //当前站和前一站
+        
+        //读取线路编号 站点数
+        int line_index, tot; //线路编号和站点数
+        sscanf(line, "%d %d", &line_index, &tot); 
+        
+
+        int cur, prev; //当前站和前一站在图中的索引
         for(int i = 0; i < tot; i++)
         {
             fgets(line, sizeof(line), fp); //读取站名
             char line_name[20];
             int transfer;
-            sscanf(line, "%s %d", line_name, transfer); //读取站名
+            sscanf(line, "%s %d", line_name, transfer); //读取站名和换乘标记
 
             //建立当前站结点
             Node current;
-            strcpy(current.name, line_name); //存储站名
-            current.transfer = transfer; //存储换乘标记
-            current.edges = NULL; //初始化边链表为空
+            strcpy(current.name, line_name); 
+            current.transfer = transfer; 
+            current.edges = NULL; 
 
-            Node *found = (Node*)bsearch(line_name, graph, n, sizeof(Node), my_cmp); //二分查找站名
-            int found_index = found ? (found - graph) : -1; //找到的站点索引
+            //二分查找站名
+            Node *found = (Node*)bsearch(line_name, graph, n, sizeof(Node), my_cmp); 
+            cur = found ? (found - graph) : -1; 
+
             //如果没有找到，说明是新站点
             if(found == NULL)
             {
                  my_cpy(&graph[n++], &current); 
-                 found_index = n - 1; //新站点的索引
+                 cur = n - 1; //新站点的索引
             }
-            
+
             // 如果是第一个，第一站作为前一站
             if(i == 0)
             {
-                my_cpy(&prev, &current);
+                prev = cur; 
                 continue;
             }
 
             //插入边
-            //!注意是N-1
-            Edge new_edge = insert_edge(prev, n - 1, line_index); //将前一站和当前站连接
+            Edge new_edge = insert_edge(graph[prev], cur, line_index); //!将前一站和当前站连接
+            graph[prev].edges = new_edge; //更新前一站的边链表
+            new_edge = insert_edge(graph[cur], prev, line_index); //站可以双向
+            graph[cur].edges = new_edge; //更新当前站的边链表
 
+            //更新前一站为当前站
+            prev = cur; 
         }
+
     }
 }
 double eps = 1e-9;
