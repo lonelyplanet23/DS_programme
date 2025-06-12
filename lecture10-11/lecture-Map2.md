@@ -24,7 +24,7 @@
 
 3. **重复以上过程，直到所有点都处理完**。
 
-
+4. O(n^2)
 ```c
 int n; // 顶点个数
 int graph[MAX][MAX]; // 邻接矩阵
@@ -88,7 +88,8 @@ void dijkstra(int start, int dist[]) {
 2. 初始化：将v0加入树
 3. 选择：从连接残图G’(顶点集V’)和最小生成树T(顶点集U)的所有边中**选择一条权值最小的边/顶点** **贪心实质！！** 从minweight里找最小的
 4. 添加：将该边及其端点加入生成树T
-5. 更新：：更新邻接顶点的最短边信息
+5. 更新：更新邻接顶点的最短边信息
+6. **时间复杂度**：O(|V|^2)；**堆优化**：O(|E|log|V|)
 
 ```C
 #define INF 1000000
@@ -128,7 +129,7 @@ int prim(int start) {
 
         //更新
         for (int j = 0; j < n; j++) {
-            if (!visited[j] && cost[k][j] < low[j]) {
+            if (!visited[j] && cost[u][j] != 0 && cost[u][j] < minweight[j]) {
                 minweight[j] = cost[k][j];
                 dest[j] = k;
             }
@@ -146,6 +147,7 @@ int prim(int start) {
 2. 更新：若边e使得T产生回路,则本次选择无效,放弃e；否则将e加入T
 3. 重复上述选择过程直到TE中包含了G的n-1条边，此时的T为G的最小生成树。
 
+4. **时间复杂度** 对边做排序，因而时间复杂度为：O(|E|log|E|)
 代码实现需要**并查集（Disjoint Set / Union-Find）**
 
 ## 小结
