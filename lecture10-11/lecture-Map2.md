@@ -60,6 +60,7 @@ void dijkstra(int start, int dist[]) {
         for (int v = 0; v < n; v++) {
             if (!visited[v] && graph[u][v] != INF && dist[u] + graph[u][v] < dist[v]) {
                 dist[v] = dist[u] + graph[u][v];
+                spath[v] = u; // 记录前驱结点
             } // 在Y中，且路径存在，且比当前距离小
         }
     }

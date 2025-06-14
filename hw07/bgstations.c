@@ -1,67 +1,112 @@
-//±àĞ´Ò»¸ö³ÌĞòÊµÏÖ±±¾©µØÌú×î¶Ì³Ë×ø£¨Õ¾£©ÏßÂ·²éÑ¯£¬ÊäÈëÎªÆğÊ¼Õ¾ÃûºÍÄ¿µÄÕ¾Ãû£¬Êä³öÎª´ÓÆğÊ¼Õ¾µ½Ä¿µÄÕ¾µÄ×î¶Ì³Ë×øÕ¾»»³ËÏßÂ·¡£
+//ç¼–å†™ä¸€ä¸ªç¨‹åºå®ç°åŒ—äº¬åœ°é“æœ€çŸ­ä¹˜åï¼ˆç«™ï¼‰çº¿è·¯æŸ¥è¯¢ï¼Œè¾“å…¥ä¸ºèµ·å§‹ç«™åå’Œç›®çš„ç«™åï¼Œè¾“å‡ºä¸ºä»èµ·å§‹ç«™åˆ°ç›®çš„ç«™çš„æœ€çŸ­ä¹˜åç«™æ¢ä¹˜çº¿è·¯ã€‚
 
-//×¢£º1. ÒªÇó²ÉÓÃDijkstraËã·¨ÊµÏÖ£»2£©Èç¹ûÁ½Õ¾¼ä´æÔÚ¶àÌõ×î¶ÌÂ·¾¶£¬ÕÒ³öÆäÖĞµÄÒ»Ìõ¼´¿É¡£
-//ÎÄ¼şbgstations.txtÎªÊı¾İÎÄ¼ş
+//æ³¨ï¼š1. è¦æ±‚é‡‡ç”¨Dijkstraç®—æ³•å®ç°ï¼›2ï¼‰å¦‚æœä¸¤ç«™é—´å­˜åœ¨å¤šæ¡æœ€çŸ­è·¯å¾„ï¼Œæ‰¾å‡ºå…¶ä¸­çš„ä¸€æ¡å³å¯ã€‚
+//æ–‡ä»¶bgstations.txtä¸ºæ•°æ®æ–‡ä»¶
 /*
-Êä³ö´ÓÆğÊ¼Õ¾µ½Ä¿µÄÕ¾µÄ³Ë×øĞÅÏ¢£¬ÒªÇó³Ë×øÕ¾Êı×îÉÙ¡£»»³ËĞÅÏ¢¸ñÊ½ÈçÏÂ£º
+è¾“å‡ºä»èµ·å§‹ç«™åˆ°ç›®çš„ç«™çš„ä¹˜åä¿¡æ¯ï¼Œè¦æ±‚ä¹˜åç«™æ•°æœ€å°‘ã€‚æ¢ä¹˜ä¿¡æ¯æ ¼å¼å¦‚ä¸‹ï¼š
 
 SSN-n1(m1)-S1-n2(m2)-...-ESN
 
-ÆäÖĞ£ºSSNºÍESN·Ö±ğÎªÆğÊ¼Õ¾ÃûºÍÄ¿µÄÕ¾Ãû£»nÎª³Ë×øµÄµØÌúÏßÂ·ºÅ£¬mÎª³Ë×øÕ¾Êı£»ÆäËü×Ö·û¶¼ÊÇÓ¢ÎÄ×Ö·û¡£
+å…¶ä¸­ï¼šSSNå’ŒESNåˆ†åˆ«ä¸ºèµ·å§‹ç«™åå’Œç›®çš„ç«™åï¼›nä¸ºä¹˜åçš„åœ°é“çº¿è·¯å·ï¼Œmä¸ºä¹˜åç«™æ•°ï¼›å…¶å®ƒå­—ç¬¦éƒ½æ˜¯è‹±æ–‡å­—ç¬¦ã€‚
 */
 #include<stdio.h>
-#include<math.h>
-#include<string.h>
-#include<ctype.h>
 #include<stdlib.h>
 #include<string.h>
-#define ll long long
-#define N 100001
-//²ÉÓÃÁÚ½Ó±í
-int n = 0, m; //nÎªÕ¾µãÊı£¬mÎªÏßÂ·Êı
-struct edge {
-    int index; //!±ßËùÔÚµÄÏßÂ·±àºÅ
+#include<wchar.h>
+#include<locale.h>
+
+#define MAX_NODES 405
+#define INF 0x3f3f3f3f // æ— ç©·å¤§
+typedef struct edge {
+    int index; // è¾¹æ‰€åœ¨çš„çº¿è·¯ç¼–å·
+    int from; //! å‰é©±ç«™ç‚¹çš„ç´¢å¼•
     int to;
     struct edge *next;
-};
-typedef struct edge* Edge; //±ßµÄÖ¸ÕëÀàĞÍ
+} *Edge;
+
 typedef struct node {
-    char name[20]; //Õ¾Ãû
-    int transfer; //»»³Ë±ê¼Ç
-    Edge edges; //±ßµÄÁ´±í
+    char name[50]; // ç«™å
+    int transfer; // æ¢ä¹˜æ ‡è®°
+    Edge edges; // è¾¹çš„é“¾è¡¨
 } Node;
-Node graph[405]; //Í¼µÄÁÚ½Ó±í±íÊ¾
-int visited[405]; //·ÃÎÊ±ê¼Ç
-int path[405]; //´æ´¢Â·¾¶
+Node graph[405]; //å›¾çš„é‚»æ¥è¡¨è¡¨ç¤º
+Edge path[405]; //!å­˜å‚¨è·¯å¾„ å‚¨å­˜å‰é©±è¾¹ï¼Ÿ
+
+int n = 0, m; // n:ç«™ç‚¹æ•°ï¼Œm:çº¿è·¯æ•°
+
+int stack[MAX_NODES]; // ç”¨äºå­˜å‚¨è·¯å¾„çš„æ ˆ
+int top = -1;
+
+void push(int value)
+{
+    if(top >= MAX_NODES - 1) {
+        printf("æ ˆæº¢å‡º\n");
+        return;
+    }
+    stack[++top] = value; // å°†å€¼å‹å…¥æ ˆ
+}
+
+int pop() 
+{
+    if(top < 0) {
+        return -1; // æ ˆä¸ºç©º
+    }
+    return stack[top--]; // å¼¹å‡ºæ ˆé¡¶å…ƒç´ 
+}
+
+int top_value() 
+{
+    if(top < 0) {
+        return -1; // æ ˆä¸ºç©º
+    }
+    return stack[top]; // è¿”å›æ ˆé¡¶å…ƒç´ 
+}
 
 int my_cmp(const void* a, const void* b) 
 {
     return strcmp(((Node*)a)->name, ((Node*)b)->name);
-} //±È½Ïº¯Êı£¬ÓÃÓÚbsearch
+}
+
 void my_cpy(Node* a, Node *b) 
 {
-    strcpy(a->name, b->name); //¸´ÖÆÕ¾Ãû
-    a->transfer = b->transfer; //¸´ÖÆ»»³Ë±ê¼Ç
-    a->edges = NULL; //³õÊ¼»¯±ßÁ´±íÎª¿Õ
-} 
+    strcpy(a->name, b->name); // å¤åˆ¶ç«™å
+    a->transfer = b->transfer; // å¤åˆ¶æ¢ä¹˜æ ‡è®°
+    a->edges = NULL; // åˆå§‹åŒ–è¾¹é“¾è¡¨ä¸ºç©º
+}
 
-Edge insert_edge(Node node, int to, int index)
+// çº¿æ€§æŸ¥æ‰¾ç«™ç‚¹
+int find_station(const char* name)
 {
+    if (n <= 0) return -1;
+    for (int i = 0; i < n; i++)
+    {
+        if (strcmp(graph[i].name, name) == 0) 
+        {
+            return i; 
+        }
+    }
+    return -1;
+}
+
+Edge insert_edge(int from, int to, int index)
+{
+    Node node = graph[from]; // è·å–å‰é©±ç«™ç‚¹
     Edge new_edge = (Edge)malloc(sizeof(struct edge));
     new_edge->index = index;
+    new_edge->from = from; // å‰é©±ç«™ç‚¹çš„ç´¢å¼•
     new_edge->to = to;
     new_edge->next = NULL;
     if (node.edges == NULL) 
     {
-        node.edges = new_edge; //Èç¹ûÃ»ÓĞ±ß£¬Ö±½Ó²åÈë
+        node.edges = new_edge; //å¦‚æœæ²¡æœ‰è¾¹ï¼Œç›´æ¥æ’å…¥
     } 
     else 
     {
         Edge p = node.edges;
         while (p->next != NULL) {
-            p = p->next; //ÕÒµ½Á´±íµÄ×îºóÒ»¸ö½Úµã
+            p = p->next; //æ‰¾åˆ°é“¾è¡¨çš„æœ€åä¸€ä¸ªèŠ‚ç‚¹
         }
-        p->next = new_edge; //²åÈëĞÂ±ß
+        p->next = new_edge; //æ’å…¥æ–°è¾¹
     }
     return node.edges; 
 }
@@ -70,70 +115,203 @@ Edge insert_edge(Node node, int to, int index)
 void Create_list(FILE* fp)
 {
     char line[100];
-    int index = 0;
-    fscanf(fp, "%d\n", &m); //¶ÁÈ¡Õ¾µãÊıºÍÏßÂ·Êı
+    int line_index, tot;
 
-    //Ò»ÌõÏßÂ·Ò»ÌõÏßÂ·µÄ¶ÁÈ¡
-    while(fgets(line, sizeof(line), fp) != NULL) 
+    fgets(line, sizeof(line), fp);
+    sscanf(line, "%d", &m); // è¯»å–çº¿è·¯æ•°
+
+    // ä¸€æ¡çº¿è·¯ä¸€æ¡çº¿è·¯çš„è¯»å–
+    while (fgets(line, sizeof(line), fp) != NULL) 
     {
-        if(line[0] == '\n' || line[0] == '\r') continue; 
+        if (line[0] == L'\n' || line[0] == L'\r') continue; 
         
-        //¶ÁÈ¡ÏßÂ·±àºÅ Õ¾µãÊı
-        int line_index, tot; //ÏßÂ·±àºÅºÍÕ¾µãÊı
-        sscanf(line, "%d %d", &line_index, &tot); 
-        
+        // è¯»å–çº¿è·¯ç¼–å·å’Œç«™ç‚¹æ•°
+        sscanf(line, "%d %d", &line_index, &tot);
 
-        int cur, prev; //µ±Ç°Õ¾ºÍÇ°Ò»Õ¾ÔÚÍ¼ÖĞµÄË÷Òı
-        for(int i = 0; i < tot; i++)
+        int cur = 0, prev = 0; // å½“å‰ç«™å’Œå‰ä¸€ç«™åœ¨å›¾ä¸­çš„ç´¢å¼•
+        for (int i = 0; i < tot; i++)
         {
-            fgets(line, sizeof(line), fp); //¶ÁÈ¡Õ¾Ãû
+            fgets(line, sizeof(line), fp); // è¯»å–ç«™å
             char line_name[20];
             int transfer;
-            sscanf(line, "%s %d", line_name, transfer); //¶ÁÈ¡Õ¾ÃûºÍ»»³Ë±ê¼Ç
+            sscanf(line, "%s %d", line_name, &transfer); // è¯»å–ç«™åå’Œæ¢ä¹˜æ ‡è®°
 
-            //½¨Á¢µ±Ç°Õ¾½áµã
+            // å»ºç«‹å½“å‰ç«™èŠ‚ç‚¹
             Node current;
-            strcpy(current.name, line_name); 
-            current.transfer = transfer; 
-            current.edges = NULL; 
+            strcpy(current.name, line_name);
+            current.transfer = transfer;
+            current.edges = NULL;
 
-            //¶ş·Ö²éÕÒÕ¾Ãû
-            Node *found = (Node*)bsearch(line_name, graph, n, sizeof(Node), my_cmp); 
-            cur = found ? (found - graph) : -1; 
+            //äºŒåˆ†æŸ¥æ‰¾ä¸è¡Œï¼Œéœ€è¦åå¤æ’åºï¼Œåªèƒ½çº¿æ€§æŸ¥æ‰¾
+            cur = find_station(line_name); //æŸ¥æ‰¾å½“å‰ç«™åœ¨å›¾ä¸­çš„ç´¢å¼•
 
-            //Èç¹ûÃ»ÓĞÕÒµ½£¬ËµÃ÷ÊÇĞÂÕ¾µã
-            if(found == NULL)
+            // å¦‚æœæ²¡æœ‰æ‰¾åˆ°ï¼Œè¯´æ˜æ˜¯æ–°ç«™ç‚¹
+            if (cur == -1)
             {
-                 my_cpy(&graph[n++], &current); 
-                 cur = n - 1; //ĞÂÕ¾µãµÄË÷Òı
+                my_cpy(&graph[n], &current); 
+                cur = n++; // æ–°ç«™ç‚¹çš„ç´¢å¼•
             }
 
-            // Èç¹ûÊÇµÚÒ»¸ö£¬µÚÒ»Õ¾×÷ÎªÇ°Ò»Õ¾
-            if(i == 0)
+            // å¦‚æœæ˜¯ç¬¬ä¸€ä¸ªï¼Œç¬¬ä¸€ç«™ä½œä¸ºå‰ä¸€ç«™
+            if (i == 0)
             {
                 prev = cur; 
                 continue;
             }
 
-            //²åÈë±ß
-            Edge new_edge = insert_edge(graph[prev], cur, line_index); //!½«Ç°Ò»Õ¾ºÍµ±Ç°Õ¾Á¬½Ó
-            graph[prev].edges = new_edge; //¸üĞÂÇ°Ò»Õ¾µÄ±ßÁ´±í
-            new_edge = insert_edge(graph[cur], prev, line_index); //Õ¾¿ÉÒÔË«Ïò
-            graph[cur].edges = new_edge; //¸üĞÂµ±Ç°Õ¾µÄ±ßÁ´±í
+            //æ’å…¥è¾¹
+            Edge new_edge = insert_edge(prev, cur, line_index); //!å°†å‰ä¸€ç«™å’Œå½“å‰ç«™è¿æ¥
+            graph[prev].edges = new_edge; //æ›´æ–°å‰ä¸€ç«™çš„è¾¹é“¾è¡¨
+            new_edge = insert_edge(cur, prev, line_index); //ç«™å¯ä»¥åŒå‘
+            graph[cur].edges = new_edge; //æ›´æ–°å½“å‰ç«™çš„è¾¹é“¾è¡¨
 
-            //¸üĞÂÇ°Ò»Õ¾Îªµ±Ç°Õ¾
+            // æ›´æ–°å‰ä¸€ç«™ä¸ºå½“å‰ç«™
             prev = cur; 
         }
-
     }
 }
-double eps = 1e-9;
+
+// Dijkstraç®—æ³•å®ç°æœ€çŸ­è·¯å¾„æŸ¥æ‰¾
+int dist[MAX_NODES]; // å­˜å‚¨èµ·ç‚¹åˆ°å„ä¸ªèŠ‚ç‚¹çš„æœ€çŸ­è·ç¦»
+void dijkstra(int start, int end)
+{
+    int visited[MAX_NODES] = {0}; 
+    for(int i = 0; i < n; i++)
+    {
+        if (i != start) 
+        {
+            dist[i] = INF; 
+            path[i] = NULL; 
+        }
+    }
+
+    //åˆå§‹åŒ–ï¼Œå°†startåŠ å…¥å·²ç¡®å®šé›†åˆä¸­
+    visited[start] = 1;
+    dist[start] = 0; 
+
+    Edge edge = graph[start].edges;
+    while(edge != NULL)
+    {
+        dist[edge->to] = 1;
+        path[edge->to] = edge; //! è®°å½•å‰é©±è¾¹
+        edge = edge->next;
+    }
+
+    //ä¸»å¾ªç¯
+    for(int i = 1; i < n; i++)
+    {
+        int min = INF;
+        int u = -1; // è¿™æ˜¯é›†åˆYä¸­çš„ç»“ç‚¹æ ‡è®°
+
+        //æ‰¾å‡ºæœªè®¿é—®ç»“ç‚¹ä¸­distæœ€å°å€¼å’Œä¸‹æ ‡
+        for(int j = 0; j < n; j++)
+        {
+            if(!visited[j] && dist[j] < min)
+            {
+                min = dist[j];
+                u = j;
+            }
+        }
+
+        //è®¿é—®
+        if(u == -1) break;
+        visited[u] = 1;
+
+        //æ›´æ–°é‚»ç»“ç‚¹
+        Edge p = graph[u].edges;
+        while(p != NULL)
+        {
+            if(!visited[p->to]) //!æ³¨æ„å“¦ 
+            {
+                if(dist[u] + 1 < dist[p->to])
+                {
+                    dist[p->to] = dist[u] + 1;
+                    path[p->to] = p; //! æ›´æ–°å‰é©±è¾¹
+                }
+            }
+            p = p->next;
+        }
+    }
+}
+
+//æ€è·¯ï¼šç”¨é˜Ÿåˆ—æ¥æ‰¾å‡ºæ•´ä¸ªè·¯å¾„ï¼šå€’ç€è¾“å…¥ï¼Œæ­£ç€è¾“å‡ºï¼Œé‡åˆ°ç‰¹æ®Šæ•°å­—â€˜0â€™è¯´æ˜è¦æ¢ä¹˜ã€‚
+void print_path(int start, int end)
+{
+    int cur = end; //éå†ç»“ç‚¹cur
+
+    while(cur != start)
+    {
+        Edge e = path[cur]; //è¯»å–å‰é©±è¾¹
+
+        int prv = e->from;
+        int line_index = e->index;
+
+        // å°†è¾¹çš„ç«™å·å…¥é˜Ÿåˆ—
+        push(e->index); 
+        
+        // æ›´æ–°å½“å‰ç«™ä¸ºå‰é©±ç«™
+        cur = prv; 
+
+        // å¦‚æœæ¥åˆ°æ¢ä¹˜ç«™ä¸”ä¸æ˜¯é¦–ç«™ï¼Œä½¿ç”¨è´Ÿæ•°æ ‡è®°æ¢ä¹˜ç«™ä¸‹æ ‡
+        //! ä¸”æ˜¯çœŸçš„æ¢ä¹˜äº†ï¼Œè€Œéè·¯è¿‡
+        if (cur != start && graph[cur].transfer && e->index != path[cur]->index) 
+        {
+            push(0 - cur); 
+        }
+    }
+
+    // æœ€ç»ˆè¾“å‡º
+    printf("%s-", graph[start].name); 
+    while(top >= 0)
+    {
+        int value = pop();
+
+        //æ¢ä¹˜ç«™
+        if(value < 0)
+        {
+            value = 0 - value;
+            printf("-%s-", graph[value].name);
+            continue;
+        }
+
+        //éæ¢ä¹˜ç«™
+        int index = value; //çº¿è·¯å·
+        int cnt = 1; //ç«™æ•°
+        //å¦‚æœæ ˆé¡¶ä¹Ÿæ˜¯è¯¥æ¡çº¿è·¯ï¼Œåˆ™ç«™æ•°+1,å‡ºæ ˆ
+        while(top_value() == index)
+        {
+            cnt++;
+            value = pop();
+        }
+
+        printf("%d(%d)", value, cnt);
+    }
+    printf("-%s", graph[end].name); 
+}
 int main()
 {
+    //# ç”¨freopenå®ç°æ›´æ–¹ä¾¿
     FILE* bgstations = fopen("bgstations.txt", "r");
     if (bgstations == NULL) {
         printf("Error opening file.\n");
         return 1;
     }
+    Create_list(bgstations);
+    
+    char start_name[20], end_name[20];
+    scanf("%s %s", start_name, end_name); 
+    int start = find_station(start_name); // æŸ¥æ‰¾èµ·å§‹ç«™åœ¨å›¾ä¸­çš„ç´¢å¼•
+    int end = find_station(end_name); // æŸ¥æ‰¾ç›®çš„ç«™åœ¨å›¾ä¸­çš„ç´¢å¼•
+
+    if (start == -1 || end == -1) {
+        printf("èµ·å§‹ç«™æˆ–ç›®çš„ç«™ä¸å­˜åœ¨ã€‚\n");
+        fclose(bgstations);
+        return 1;
+    }
+
+    dijkstra(start, end); 
+    print_path(start, end); 
+
+    fclose(bgstations);
     return 0;
 }
