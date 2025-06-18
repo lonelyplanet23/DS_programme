@@ -126,7 +126,7 @@ void layerOrder(BTNodeptr t)
        2. L 以前序遍历原则遍历根结点的左子树;
        3. R 以前序遍历原则遍历根结点的右子树。
 ```C
-    void preorder(BTnodeptr p)
+    // void preorder(BTnodeptr p)
     {
         if(p != NULL)
         {
